@@ -5,10 +5,23 @@ import { authService } from 'fbase';
 function App() {
 	const [init, setInit] = useState(false);
 	const [userObj, setUserObj] = useState(null);
+
+	const refreshUser = () => {
+		const user = authService.currentUser;
+		setUserObj({
+			uid: user.uid,
+			displayName: user.displayName,
+			updateProfile: (args) => user.updateProfile(args),
+		});
+	};
 	useEffect(() => {
 		authService.onAuthStateChanged((user) => {
 			if (user) {
-				setUserObj(user);
+				setUserObj({
+					uid: user.uid,
+					displayName: user.displayName,
+					updateProfile: (args) => user.updateProfile(args),
+				});
 			}
 			setInit(true);
 		});
@@ -17,7 +30,11 @@ function App() {
 	return (
 		<>
 			{init ? (
-				<AppRouter isLoggedIn={Boolean(userObj)} userObj={userObj} />
+				<AppRouter
+					isLoggedIn={Boolean(userObj)}
+					userObj={userObj}
+					refreshUser={refreshUser}
+				/>
 			) : (
 				<span>초기화중...</span>
 			)}
