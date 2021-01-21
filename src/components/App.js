@@ -13,6 +13,7 @@ function App() {
 			displayName: user.displayName,
 			updateProfile: (args) => user.updateProfile(args),
 		});
+		// setUserObj(Object.assign({}, user))
 	};
 	useEffect(() => {
 		authService.onAuthStateChanged((user) => {
